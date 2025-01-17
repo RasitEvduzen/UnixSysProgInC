@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
 
     if(a_flag + d_flag + m_flag + s_flag != 1)
-        "only one option must be specified except -M\n";
+        fprintf(stderr,"only one option must be specified except -M\n");
 
     double arg1 = atof(argv[optind]);
     double arg2 = atof(argv[optind + 1]);
