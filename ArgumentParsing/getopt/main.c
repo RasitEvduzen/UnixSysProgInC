@@ -1,20 +1,18 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
+#include <getopt.h>
+#include <stdlib.h>
 
-int main(int argc, char** argv)
+int main(int argc, char *argv[])
 {
     int result;
-    int a_flag, b_flag, c_flag, d_flag, e_flag, err_flag;
-    char *c_arg ,*e_arg;
+    char *c_arg, *e_arg;
+    int a_flag, b_flag, c_flag, d_flag, e_flag, error_flag;
+    a_flag = b_flag = c_flag = d_flag = e_flag = error_flag = 0;
+    opterr = 0;     // For user defined error message
 
-    a_flag = b_flag = c_flag = d_flag = e_flag = err_flag = 0;
-    opterr = 0; //canceled default error messages
-
-    while((result = getopt(argc, argv, "abc:de:")) != -1)//taking next option in every step  
-    {
-        switch(result)
-        {
+    while((result = getopt(argc,argv,"abc:de:")) != -1) // getopt() returns -1 when there are no more options to parse
+        switch (result){
             case 'a':
                 a_flag = 1;
                 break;
@@ -33,33 +31,26 @@ int main(int argc, char** argv)
                 e_arg = optarg;
                 break;
             case '?':
-                if(optopt == 'c' || optopt == 'e')//give the option that used incorrectly
-                    fprintf(stderr, "-%c option must have an argument!\n",optopt);
-                else
-                    fprintf(stderr, "-%c invalid option!\n",optopt);
-                err_flag = 1;
+                if(optopt == 'c' || optopt == 'e') fprintf(stderr,"-%c option must have an argument!\n",optopt);
+                else fprintf(stderr,"-%c invalid option!\n",optopt);
+                error_flag = 1;
+                break;
+            default:
+                break;
         }
+    if(error_flag) exit(EXIT_FAILURE);
+
+    if(a_flag) printf("-a option given\n");                           // Option with no argument
+    if(b_flag) printf("-b option given\n");                           // Option with no argument
+    if(c_flag) printf("-c option given with argument: %s\n",c_arg);   // Option with argument
+    if(d_flag) printf("-d option given\n");                           // Option with no argument
+    if(e_flag) printf("-e option given with argument: %s\n",e_arg);   // Option with argument
+
+    if(optind != argc){
+    printf("\nArguments without option:\n");                          
+        for(int i = optind; argv[i]; ++i)                             // Arguments without option
+            printf("%s \n",argv[i]);
     }
 
-    if(err_flag)
-        exit(EXIT_FAILURE);
-
-    if(a_flag)
-        printf("-a is given\n");
-    if(c_flag)
-        printf("-b is given\n");
-    if(b_flag)
-        printf("-c is given with argument \"%s\"\n",c_arg);
-    if(d_flag)
-        printf("-d is given\n");
-    if(e_flag)
-        printf("-e is given with argument \"%s\"\n",e_arg);
-
-    if(optind != argc)    
-        printf("Arguements without option:\n");
-    
-    for(int i = optind; i<argc;++i)//starting index of arguments without option
-        puts(argv[i]);
-
-
+    return 0;
 }
