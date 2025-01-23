@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
                 number_arg = optarg;
                 break;
             case '?':
-                if (optopt = 'b')
+                if (optopt == 'b')
                     fprintf(stderr,"-b option without argument!\n");
                 else if(optopt == LENGTH)
                     fprintf(stderr,"--length option without argument!\n");
